@@ -22,22 +22,20 @@ export default function Login() {
   const navigate = useNavigate()
 
   let from = location.state?.from?.pathname || "/";
-  console.log(location)
-  
+
   const handleClick = () => setShowPassword(!showPassword)
-  
+
   const handleInputChange = (e) => {
     setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
   }
 
   const onSubmit = async (loginForm) => {
     try {
-      let description = ''
       let response = await UserServer.login(loginForm.username, loginForm.password)
       // console.log(response)
       const data = await response.json()
       // console.log(data)
-      if(!response.ok) {
+      if (!response.ok) {
         toast({
           title: 'Error!',
           description: data.detail,
@@ -54,7 +52,18 @@ export default function Login() {
           duration: 5000,
           isClosable: true,
         })
-        navigate(-1)
+        if (data.access_token != null) {
+          response = await UserServer.getUserMe(data.access_token)
+          if (response.ok) {
+            let user = await response.json()
+            if(user.role === "Usuario") {
+              navigate('/')
+            } else if(user.role === "Administrador") {
+              navigate('/dashboard')
+            }
+          }
+        }
+        // navigate(-1)
       }
     } catch (error) {
       console.error(error)

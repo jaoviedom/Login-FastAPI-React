@@ -1,6 +1,7 @@
 const TOKEN_URL = "http://127.0.0.1:8000/token";
 const ADD_URL = "http://127.0.0.1:8000/adduser/";
 const GET_USERS_URL = "http://127.0.0.1:8000/users/";
+const ME_URL = "http://127.0.0.1:8000/users/me/";
 
 export const login = async(username, password) => {
   return await fetch(TOKEN_URL, {
@@ -33,6 +34,16 @@ export const registerUser = async (newUser) => {
 
 export const getUser = async (userId) => {
   return await fetch(`${API_URL}${userId}`);
+};
+
+export const getUserMe = async (token) => {
+  return await fetch(ME_URL, {
+    method: 'GET',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
 };
 
 export const updateResidential = async (residentialId, updatedResidential) => {

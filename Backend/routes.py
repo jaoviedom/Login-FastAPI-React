@@ -12,7 +12,7 @@ from schemas import individual_user, list_users
 
 SECRET_KEY = "8afe2ba284e85a5483e102adc1e5ffef5a831dd11054fb52284fe0d245863051"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 1
 
 router = APIRouter()
 
