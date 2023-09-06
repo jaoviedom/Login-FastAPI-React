@@ -12,29 +12,12 @@ from schemas import individual_user, list_users
 
 SECRET_KEY = "8afe2ba284e85a5483e102adc1e5ffef5a831dd11054fb52284fe0d245863051"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 1
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 router = APIRouter()
 
 pwd_context = CryptContext(schemes =['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-# db = {
-#     "tim": {
-#         "username": "tim",
-#         "full_name": "Tim Ruscica",
-#         "email": "tim@gmail.com",
-#         "hashed_password": "$2b$12$KjTcgQ5NlYYuqfUUmBArPefFB8tBW.3dZHll1mjj//7WFXNhLyg8m",
-#         "disabled": False
-#     },
-#     "jose": {
-#         "username": "jose",
-#         "full_name": "Jose Oviedo",
-#         "email": "jose@gmail.com",
-#         "hashed_password": "$2b$12$KjTcgQ5NlYYuqfUUmBArPefFB8tBW.3dZHll1mjj//7WFXNhLyg8m",
-#         "disabled": False
-#     }
-# }
 
 ######################
 # AUTH
@@ -95,7 +78,7 @@ async def get_current_active_user(current_user: UserInDB = Depends(get_current_u
     
     return current_user
 
-@router.post("/token", response_model=Token)
+@router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
@@ -103,7 +86,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
                             detail="No se han podido validar las credenciales", headers={"WWW-Authenticate": "Bearer"})
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={'sub': user.username}, expires_delta=access_token_expires)
-    return {'access_token': access_token, 'token_type': 'bearer'}
+    return {'access_token': access_token, 'token_type': 'bearer', 'role': user.role}
 
 @router.post("/adduser/")
 async def create_user(user: User):

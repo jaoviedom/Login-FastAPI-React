@@ -18,7 +18,7 @@ class User(BaseModel):
     full_name: str | None = None
     hashed_password: str
     role: str | None = 'Usuario'
-    disabled: bool | None = None
+    disabled: bool | None = False
 
 class UserInDB(User):
   hashed_password: str
