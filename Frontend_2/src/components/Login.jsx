@@ -38,7 +38,7 @@ export default function Login() {
         }
       );
       // console.log(JSON.stringify(response?.data));
-      const accessToken = response?.data?.accessToken;
+      const accessToken = response?.data?.access_token;
       const role = response?.data?.role;
       setAuth({ username, password, role, accessToken });
       setUsername('');
