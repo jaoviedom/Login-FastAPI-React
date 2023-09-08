@@ -4,6 +4,7 @@ export const UserContext = createContext();
 
 export const UserProvider = (props) => {
   const [token, setToken] = useState(localStorage.getItem("accessToken"));
+  const [auth, setAuth] = useState({})
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -19,14 +20,19 @@ export const UserProvider = (props) => {
 
       if (!response.ok) {
         setToken(null);
+        setAuth(null)
       }
+      // let user = await response.json()
+      // let username = user.username
+      // let role = user.role
+      // setAuth({ username, role });
       localStorage.setItem("accessToken", token);
     };
     fetchUser();
   }, [token]);
 
   return (
-    <UserContext.Provider value={[token, setToken]}>
+    <UserContext.Provider value={[token, setToken, auth, setAuth]}>
       {props.children}
     </UserContext.Provider>
   );

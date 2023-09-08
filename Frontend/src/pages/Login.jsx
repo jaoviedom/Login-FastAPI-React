@@ -14,14 +14,15 @@ export default function Login() {
     password: '',
   }
 
+  const location = useLocation()
+  const from = location?.state?.from?.pathname || "/"
+
   const [loginForm, setLoginForm] = useState(initialState);
   const [showPassword, setShowPassword] = useState(false)
-  const [, setToken] = useContext(UserContext)
+  const [, setToken, , setAuth] = useContext(UserContext)
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
   const toast = useToast()
   const navigate = useNavigate()
-
-  let from = location.state?.from?.pathname || "/";
 
   const handleClick = () => setShowPassword(!showPassword)
 
@@ -56,14 +57,13 @@ export default function Login() {
           response = await UserServer.getUserMe(data.access_token)
           if (response.ok) {
             let user = await response.json()
-            if(user.role === "Usuario") {
-              navigate('/')
-            } else if(user.role === "Administrador") {
-              navigate('/dashboard')
-            }
+            let username = user.username
+            let role = user.role
+            setAuth({ username, role });
+            navigate(from, { replace: true })
           }
         }
-        // navigate(-1)
+        navigate(from, { replace: true })
       }
     } catch (error) {
       console.error(error)

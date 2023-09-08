@@ -10,6 +10,7 @@ export default function Login() {
   const navigate = useNavigate()
   const location = useLocation()
   const from = location?.state?.from?.pathname || "/"
+  console.log(location)
 
   const userRef = useRef();
   const errRef = useRef();
@@ -43,6 +44,7 @@ export default function Login() {
       setAuth({ username, password, role, accessToken });
       setUsername('');
       setPwd('');
+      console.log(location)
       navigate(from, { replace: true })
     } catch (err) {
       if (!err?.response) {
